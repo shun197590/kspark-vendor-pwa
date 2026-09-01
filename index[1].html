@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#075d97">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="查高軟廠商">
+<title>查高軟廠商｜高雄軟體園區</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<style>
+:root{--p:#075d97;--pd:#064b7c;--bg:#f4f7fa;--card:#fff;--text:#1f2937;--muted:#667788;--line:#dbe4eb;--soft:#e8f3fa;--danger:#b3261e}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;background:var(--bg)}body{margin:0;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}
+.header{position:sticky;top:0;z-index:20;padding:max(14px,env(safe-area-inset-top)) 16px 14px;background:linear-gradient(135deg,var(--pd),#0872b9);color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.12)}.header-inner{max-width:920px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.small{font-size:13px;opacity:.82}.title{font-size:23px;font-weight:800}.actions{display:flex;gap:8px}.icon-btn{min-width:38px;height:38px;border:1px solid rgba(255,255,255,.3);border-radius:10px;background:rgba(255,255,255,.13);color:#fff;font-weight:800;cursor:pointer}.container{max-width:920px;margin:auto;padding:15px 15px calc(30px + env(safe-area-inset-bottom))}
+.notice{display:none;border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.55}.notice.show{display:block}.notice.info{background:#edf6fc;color:var(--p)}.notice.success{background:#edf8f1;color:#19703d}.notice.warning{background:#fff8e8;color:#8a5b0e}.notice.error{background:#fff0ef;color:var(--danger)}
+.search-card{background:var(--card);border:1px solid #e5ebf0;border-radius:17px;padding:15px;box-shadow:0 4px 18px rgba(0,0,0,.07)}.search{width:100%;padding:14px 15px;border:1px solid var(--line);border-radius:12px;font-size:16px;outline:none}.search:focus{border-color:#0872b9;box-shadow:0 0 0 3px rgba(8,114,185,.1)}.filters{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:12px}.label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px}select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.toolbar button{border:1px solid var(--line);background:#fff;color:var(--p);border-radius:10px;padding:9px 11px;font-size:13px;font-weight:800;cursor:pointer}
+.result-info{display:flex;justify-content:space-between;gap:10px;padding:15px 3px 9px;color:var(--muted);font-size:13px}.count{color:var(--p);font-weight:800;white-space:nowrap}.vendor{background:#fff;border:1px solid #e5ebf0;border-radius:15px;padding:15px;margin-bottom:11px;box-shadow:0 2px 10px rgba(0,0,0,.055);cursor:pointer}.vendor-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.vendor-name{font-size:17px;font-weight:800;line-height:1.45}.tag{background:var(--soft);color:var(--p);padding:5px 8px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap}.vendor-info{margin-top:10px;font-size:14px;line-height:1.72;color:var(--muted);word-break:break-word}.loc{color:var(--p);font-weight:800}.empty{background:#fff;border:1px solid #e5ebf0;border-radius:14px;padding:28px 18px;text-align:center;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.52);display:none;z-index:100}.modal.show{display:block}.modal-box{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:720px;max-height:91vh;overflow-y:auto;background:#fff;border-radius:22px 22px 0 0;padding-bottom:env(safe-area-inset-bottom)}.modal-head{position:sticky;top:0;z-index:2;background:var(--p);color:#fff;padding:17px 58px 17px 17px}.modal-source{font-size:12px;opacity:.82}.modal-name{font-size:20px;font-weight:800;line-height:1.45}.close{position:absolute;right:14px;top:12px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:20px;cursor:pointer}.modal-body{padding:17px}.section{margin:24px 0 9px;color:var(--p);font-size:17px;font-weight:800}.section:first-child{margin-top:0}.detail{border-bottom:1px solid #e4e9ed;padding:10px 0}.detail-label{font-size:12px;color:#778899;margin-bottom:5px;font-weight:700}.detail-value{white-space:pre-line;line-height:1.65;word-break:break-word;text-align:left}.phone{color:#0572b7;font-weight:800;text-decoration:none}.location-card{background:#f2f7fb;border:1px solid #dbeaf4;border-radius:12px;padding:13px;margin-bottom:9px}.location-title{font-size:16px;font-weight:800;color:var(--p);margin-bottom:7px}.location-note{font-size:12px;color:var(--muted);margin-bottom:4px}.location-title-link{color:var(--p);text-decoration:none}.location-title-link:active{text-decoration:underline}.location-map-button{display:inline-block;margin-top:10px;padding:9px 13px;border-radius:9px;background:var(--p);color:#fff;text-decoration:none;font-size:14px;font-weight:800}.location-cell{margin-top:7px;font-size:12px;color:var(--muted)}
+.settings{display:grid;gap:11px}.settings label{font-size:13px;color:var(--muted);font-weight:700}.settings input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px}.btn-row{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer}.btn.primary{background:var(--p);color:#fff}.btn.secondary{background:#edf3f7;color:var(--p)}.btn.danger{background:#fff0ef;color:var(--danger)}.help{font-size:12px;color:var(--muted);line-height:1.55}
+@media(max-width:620px){.filters{grid-template-columns:1fr}.container{padding:12px 12px calc(28px + env(safe-area-inset-bottom))}.title{font-size:21px}.vendor-name{font-size:16px}.actions .txt{display:none}}
+</style>
+</head>
+<body>
+<header class="header"><div class="header-inner"><div><div class="small">高雄軟體園區</div><div class="title">廠商資料查詢</div></div><div class="actions"><button id="installBtn" class="icon-btn" type="button" hidden>＋<span class="txt">安裝</span></button><button id="settingsBtn" class="icon-btn" type="button" aria-label="設定">⚙</button></div></div></header>
+<main class="container">
+<div id="notice" class="notice"></div>
+<section class="search-card">
+<input id="search" class="search" type="search" autocomplete="off" placeholder="🔍 搜尋公司名稱、統編、產業、地址、棟別、樓層">
+<div class="filters">
+<div><div class="label">棟別</div><select id="building"><option value="">全部棟別</option><option value="國城A棟">國城A棟</option><option value="國城B棟">國城B棟</option><option value="國城C棟">國城C棟</option><option value="新創大樓">新創大樓</option><option value="鴻海大樓">鴻海大樓</option></select></div>
+<div><div class="label">樓層</div><select id="floor"><option value="">全部樓層</option></select></div>
+<div><div class="label">資料類型</div><select id="source"><option value="">全部資料</option><option value="區內事業">區內事業</option><option value="營業或聯絡處所">營業或聯絡處所</option></select></div>
+</div>
+<div class="toolbar"><button id="refreshBtn" type="button">↻ 更新資料</button><button id="clearBtn" type="button">清除篩選</button></div>
+</section>
+<div class="result-info"><span id="status">準備中...</span><span id="count" class="count"></span></div>
+<div id="list"></div>
+</main>
+
+<div id="detailModal" class="modal"><div class="modal-box"><div class="modal-head"><button class="close" type="button" onclick="closeDetail()">×</button><div id="detailSource" class="modal-source"></div><div id="detailName" class="modal-name"></div></div><div id="detailBody" class="modal-body"></div></div></div>
+
+<div id="settingsModal" class="modal"><div class="modal-box"><div class="modal-head"><button class="close" type="button" onclick="closeSettings()">×</button><div class="modal-source">PWA 設定</div><div class="modal-name">資料來源設定</div></div><div class="modal-body"><div class="settings"><label for="apiUrlInput">Google Apps Script Web App /exec 網址</label><input id="apiUrlInput" type="url" placeholder="https://script.google.com/macros/s/......../exec"><div class="help">請貼上 Apps Script「部署 → 管理部署作業」的 Web App 網址。必須以 <b>https://script.google.com/macros/s/</b> 開頭並以 <b>/exec</b> 結尾。此設定只儲存在目前裝置。</div><div class="btn-row"><button id="saveApiBtn" class="btn primary" type="button">儲存並讀取資料</button><button id="testApiBtn" class="btn secondary" type="button">測試連線</button><button id="clearCacheBtn" class="btn danger" type="button">清除離線資料</button></div></div></div></div></div>
+
+<script>
+'use strict';
+const API_KEY='ksparkVendorApiUrl', DATA_KEY='ksparkVendorDataV1';
+let allData=[], deferredInstallPrompt=null, noticeTimer=null;
+const $=id=>document.getElementById(id), notice=$('notice'), search=$('search'), building=$('building'), floor=$('floor'), source=$('source'), statusEl=$('status'), countEl=$('count'), list=$('list'), settingsModal=$('settingsModal'), apiUrlInput=$('apiUrlInput'), installBtn=$('installBtn');
+
+window.addEventListener('load', async()=>{registerSW();apiUrlInput.value=getApi();const cached=loadCache();if(cached?.data)applyResult(cached,true);if(!getApi()){showNotice('尚未設定 Apps Script API。請點右上角 ⚙，貼上您的 /exec 網址。','warning');openSettings();return;}await loadRemote(false);});
+
+async function registerSW(){if(!('serviceWorker' in navigator))return;try{await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});}catch(e){console.warn(e)}}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;installBtn.hidden=false});
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;installBtn.hidden=true;showNotice('已完成安裝「查高軟廠商」。','success',2500)});
+installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt){showNotice('Android Chrome 可從選單選「安裝應用程式」；iPhone/iPad 請用 Safari「分享 → 加入主畫面」。','info');return;}deferredInstallPrompt.prompt();try{await deferredInstallPrompt.userChoice}finally{deferredInstallPrompt=null;installBtn.hidden=true}});
+
+function getApi(){return(localStorage.getItem(API_KEY)||'').trim()}
+function normalizeApi(v){return String(v||'').trim().split('?')[0].split('#')[0]}
+function validApi(v){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/i.test(v)}
+
+async function loadRemote(force=false){const api=getApi();if(!validApi(api)){showNotice('API 網址格式不正確，請點 ⚙ 重新設定。','error');return;}statusEl.textContent='正在取得最新資料...';try{const r=await fetch(api+'?action=mergedLocations&_='+Date.now(),{cache:force?'reload':'no-store',redirect:'follow'});if(!r.ok)throw new Error('HTTP '+r.status);const result=await r.json();if(!result?.success)throw new Error(result?.message||'API 回傳失敗');saveCache(result);applyResult(result,false);showNotice('已取得最新廠商資料。','success',2200)}catch(e){const cached=loadCache();if(cached?.data){applyResult(cached,true);showNotice('目前無法連線到 Google 試算表，已使用上次成功取得的離線資料。','warning')}else{statusEl.textContent='資料讀取失敗';list.innerHTML='<div class="empty">無法讀取資料。請確認網路、Apps Script 部署權限與 API 網址。<br><br>'+esc(e.message||'')+'</div>';showNotice('無法讀取線上資料，且目前沒有離線資料。','error')}}}
+function saveCache(v){try{localStorage.setItem(DATA_KEY,JSON.stringify(v))}catch(e){console.warn(e)}}
+function loadCache(){try{const t=localStorage.getItem(DATA_KEY);return t?JSON.parse(t):null}catch(e){return null}}
+function applyResult(result,offline){allData=Array.isArray(result.data)?result.data:[];refreshFloors();statusEl.textContent=(offline?'離線資料｜':'')+(result.rawCount!=null?'原始 '+result.rawCount+' 筆 → ':'')+'整併 '+(result.mergedCount??allData.length)+' 家｜位置配對 '+(result.matchedLocationCount??0)+' 筆';filterData()}
+
+function floorRank(v){const t=String(v||'').toUpperCase().trim(),b=t.match(/^B(\d+)F?$/),n=t.match(/(\d+)/);return b?-Number(b[1]):n?Number(n[1]):-999}
+function refreshFloors(){const b=building.value,old=floor.value,set=new Set();allData.forEach(i=>(i.locations||[]).forEach(l=>{if(b&&l.building!==b)return;if(l.floor)set.add(l.floor)}));const arr=[...set].sort((a,b)=>floorRank(b)-floorRank(a));floor.innerHTML='<option value="">全部樓層</option>';arr.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;floor.appendChild(o)});if(arr.includes(old))floor.value=old}
+
+function filterData(){const k=norm(search.value),b=building.value,f=floor.value,s=source.value;const data=allData.filter(i=>{const locs=i.locations||[];if(b){const bm=i.building===b||locs.some(l=>l.building===b);if(!bm)return false}if(f){const fm=locs.some(l=>b?l.building===b&&l.floor===f:l.floor===f);if(!fm)return false}if(s&&!(i.sources||[]).includes(s))return false;if(!k)return true;const lt=locs.map(l=>[l.building,l.floor,l.position,l.rawText,l.matchedToken].join(' ')).join(' ');return norm([i.name,(i.otherNames||[]).join(' '),i.taxId,(i.taxIds||[]).join(' '),i.address,i.building,i.phone,i.floor,i.position,i.locationSummary,(i.companyAddresses||[]).join(' '),(i.officeAddresses||[]).join(' '),(i.companyPhones||[]).join(' '),(i.officePhones||[]).join(' '),(i.businessItems||[]).join(' '),(i.industryTypes||[]).join(' '),lt].join(' ')).includes(k)});render(data)}
+function render(data){countEl.textContent=data.length+' 家';if(!data.length){list.innerHTML='<div class="empty">找不到符合條件的廠商</div>';return}list.innerHTML='';const frag=document.createDocumentFragment();data.forEach(i=>{const c=document.createElement('div');c.className='vendor';c.innerHTML='<div class="vendor-top"><div class="vendor-name">'+esc(i.name||'未命名廠商')+'</div><div class="tag">'+esc(i.sourceLabel||'')+'</div></div><div class="vendor-info"><span class="loc">🏢 '+esc(i.locationSummary||i.building||'位置未登錄')+'</span><br>📍 '+esc(i.address||'地址未登錄')+'<br>☎ '+esc(i.phone||'電話未登錄')+'</div>';c.onclick=()=>showDetail(i);frag.appendChild(c)});list.appendChild(frag)}
+
+function showDetail(i){
+  $('detailSource').textContent=i.sourceLabel||'';
+  $('detailName').textContent=i.name||'廠商詳細資料';
+
+  let h=
+    '<div class="section">基本資料</div>'
+    +detail('統一編號',i.taxId)
+    +detail('資料來源',(i.sources||[]).join('、'))
+    +detail('主要棟別',i.building)
+    +detail('主要地址',i.address)
+    +phoneDetail('主要電話',i.phone);
+
+  if((i.sources||[]).includes('區內事業')){
+    h+='<div class="section">區內事業資料</div>'
+      +detail('地址',join(i.companyAddresses))
+      +detail('棟別',join(i.companyBuildings))
+      +detail('電話',join(i.companyPhones))
+      +detail('營業項目',join(i.businessItems,'\n\n'));
+  }
+
+  if((i.sources||[]).includes('營業或聯絡處所')){
+    h+='<div class="section">營業或聯絡處所資料</div>'
+      +detail('營業處地址',join(i.officeAddresses))
+      +detail('棟別',join(i.officeBuildings))
+      +detail('電話',join(i.officePhones))
+      +detail('行業別',join(i.industryTypes))
+      +detail('郵遞區號',join(i.postalCodes));
+  }
+
+  h+='<div class="section">進駐位置</div>';
+
+  if(i.locations?.length){
+    i.locations.forEach(l=>{
+      const t=
+        esc(l.building||'')
+        +(l.floor?'｜'+esc(l.floor):'')
+        +(l.position?'｜位置'+esc(l.position):'');
+
+      const titleHtml=l.sheetUrl
+        ?'<a class="location-title-link" href="'+esc(l.sheetUrl)+'" target="_blank" rel="noopener noreferrer">'+t+'</a>'
+        :t;
+
+      const mapButton=l.sheetUrl
+        ?'<a class="location-map-button" href="'+esc(l.sheetUrl)+'" target="_blank" rel="noopener noreferrer">🗺 查看進駐位置圖</a>'
+        :'';
+
+      const cellInfo=l.sourceCell
+        ?'<div class="location-cell">原始儲存格：'+esc(l.sourceCell)+'</div>'
+        :'';
+
+      h+='<div class="location-card">'
+        +'<div class="location-title">'+titleHtml+'</div>'
+        +'<div class="location-note">位置圖原始內容</div>'
+        +'<div>'+esc(l.rawText||'')+'</div>'
+        +cellInfo
+        +mapButton
+        +'</div>';
+    });
+  }else{
+    h+=detail('位置','尚未完成位置配對');
+  }
+
+  $('detailBody').innerHTML=h;
+  $('detailModal').classList.add('show');
+}
+function closeDetail(){$('detailModal').classList.remove('show')}
+function cleanMultiline(v){return String(v||'').replace(/\t/g,' ').replace(/^[ \u3000]+/gm,'').replace(/[ \u3000]+$/gm,'').replace(/ {2,}/g,' ').trim()}
+function detail(l,v){const cv=cleanMultiline(v||'—');return '<div class="detail"><div class="detail-label">'+esc(l)+'</div><div class="detail-value">'+esc(cv)+'</div></div>'}
+function phoneDetail(l,v){if(!v)return detail(l,'—');const m=String(v).match(/[0-9][0-9\-() ]{5,}[0-9]/),tel=m?m[0].replace(/[^0-9+]/g,''):'';return tel?'<div class="detail"><div class="detail-label">'+esc(l)+'</div><div class="detail-value"><a class="phone" href="tel:'+esc(tel)+'">☎ '+esc(v)+'</a></div></div>':detail(l,v)}
+function join(v,sep='、'){return Array.isArray(v)&&v.length?v.join(sep):''}
+
+function openSettings(){apiUrlInput.value=getApi();settingsModal.classList.add('show')}
+function closeSettings(){settingsModal.classList.remove('show')}
+async function saveApi(){const u=normalizeApi(apiUrlInput.value);if(!validApi(u)){showNotice('API 網址格式不正確。','error');return}localStorage.setItem(API_KEY,u);apiUrlInput.value=u;closeSettings();await loadRemote(true)}
+async function testApi(){const u=normalizeApi(apiUrlInput.value);if(!validApi(u)){showNotice('API 網址格式不正確。','error');return}showNotice('正在測試 Apps Script API...','info');try{const r=await fetch(u+'?action=status&_='+Date.now(),{cache:'no-store',redirect:'follow'});if(!r.ok)throw new Error('HTTP '+r.status);const x=await r.json();if(!x?.success)throw new Error(x?.message||'API 回傳失敗');showNotice('連線成功。API 版本：'+(x.version||'未提供'),'success')}catch(e){showNotice('API 連線失敗：'+(e.message||''),'error')}}
+function clearCache(){localStorage.removeItem(DATA_KEY);showNotice('已清除本機離線廠商資料；API 網址設定仍保留。','success')}
+function showNotice(msg,type='info',ms=0){clearTimeout(noticeTimer);notice.className='notice show '+type;notice.innerHTML=msg;if(ms)noticeTimer=setTimeout(()=>notice.classList.remove('show'),ms)}
+function norm(v){return String(v||'').toLowerCase().replace(/\s+/g,'')}
+function esc(v){return String(v||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}
+
+search.addEventListener('input',filterData);building.addEventListener('change',()=>{floor.value='';refreshFloors();filterData()});floor.addEventListener('change',filterData);source.addEventListener('change',filterData);$('refreshBtn').onclick=()=>loadRemote(true);$('clearBtn').onclick=()=>{search.value='';building.value='';floor.value='';source.value='';refreshFloors();filterData();search.focus()};$('settingsBtn').onclick=openSettings;$('saveApiBtn').onclick=saveApi;$('testApiBtn').onclick=testApi;$('clearCacheBtn').onclick=clearCache;$('detailModal').onclick=e=>{if(e.target===$('detailModal'))closeDetail()};settingsModal.onclick=e=>{if(e.target===settingsModal)closeSettings()};window.addEventListener('online',()=>showNotice('網路連線已恢復，可按「更新資料」取得最新資料。','success',3000));window.addEventListener('offline',()=>showNotice('目前離線，系統會使用上次成功取得的資料。','warning'));
+</script>
+</body>
+</html>

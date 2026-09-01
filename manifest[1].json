@@ -1,0 +1,27 @@
+{
+  "id": "./",
+  "name": "查高軟廠商｜高雄軟體園區廠商資料查詢",
+  "short_name": "查高軟廠商",
+  "description": "高雄軟體園區廠商資料、棟別、樓層、進駐位置與位置圖精準定位行動查詢工具",
+  "lang": "zh-TW",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f7fa",
+  "theme_color": "#075d97",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
