@@ -30,7 +30,7 @@
 <section class="search-card">
 <input id="search" class="search" type="search" autocomplete="off" placeholder="🔍 搜尋公司名稱、統編、產業、地址、棟別、樓層">
 <div class="filters">
-<div><div class="label">棟別</div><select id="building"><option value="">全部棟別</option><option value="國城A棟">國城A棟</option><option value="國城B棟">國城B棟</option><option value="國城C棟">國城C棟</option><option value="新創大樓">新創大樓</option><option value="鴻海大樓">鴻海大樓</option></select></div>
+<div><div class="label">棟別</div><select id="building"><option value="">全部棟別</option><option value="南區綜合大樓A棟">南區綜合大樓A棟</option><option value="南區綜合大樓B棟">南區綜合大樓B棟</option><option value="南區綜合大樓C棟">南區綜合大樓C棟</option><option value="新創大樓">新創大樓</option><option value="鴻海大樓">鴻海大樓</option></select></div>
 <div><div class="label">樓層</div><select id="floor"><option value="">全部樓層</option></select></div>
 <div><div class="label">資料類型</div><select id="source"><option value="">全部資料</option><option value="區內事業">區內事業</option><option value="營業或聯絡處所">營業或聯絡處所</option></select></div>
 </div>
@@ -64,7 +64,61 @@ function validApi(v){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/e
 async function loadRemote(force=false){const api=getApi();if(!validApi(api)){showNotice('API 網址格式不正確，請點 ⚙ 重新設定。','error');return;}statusEl.textContent='正在取得最新資料...';try{const r=await fetch(api+'?action=mergedLocations&_='+Date.now(),{cache:force?'reload':'no-store',redirect:'follow'});if(!r.ok)throw new Error('HTTP '+r.status);const result=await r.json();if(!result?.success)throw new Error(result?.message||'API 回傳失敗');saveCache(result);applyResult(result,false);showNotice('已取得最新廠商資料。','success',2200)}catch(e){const cached=loadCache();if(cached?.data){applyResult(cached,true);showNotice('目前無法連線到 Google 試算表，已使用上次成功取得的離線資料。','warning')}else{statusEl.textContent='資料讀取失敗';list.innerHTML='<div class="empty">無法讀取資料。請確認網路、Apps Script 部署權限與 API 網址。<br><br>'+esc(e.message||'')+'</div>';showNotice('無法讀取線上資料，且目前沒有離線資料。','error')}}}
 function saveCache(v){try{localStorage.setItem(DATA_KEY,JSON.stringify(v))}catch(e){console.warn(e)}}
 function loadCache(){try{const t=localStorage.getItem(DATA_KEY);return t?JSON.parse(t):null}catch(e){return null}}
-function applyResult(result,offline){allData=Array.isArray(result.data)?result.data:[];refreshFloors();statusEl.textContent=(offline?'離線資料｜':'')+(result.rawCount!=null?'原始 '+result.rawCount+' 筆 → ':'')+'整併 '+(result.mergedCount??allData.length)+' 家｜位置配對 '+(result.matchedLocationCount??0)+' 筆';filterData()}
+function normalizeBuildingLabel(v){
+  const map={
+    '國城A棟':'南區綜合大樓A棟',
+    '國城B棟':'南區綜合大樓B棟',
+    '國城C棟':'南區綜合大樓C棟'
+  };
+  const t=String(v||'').trim();
+  return map[t]||t;
+}
+
+function normalizeBuildingText(v){
+  return String(v||'')
+    .replaceAll('國城A棟','南區綜合大樓A棟')
+    .replaceAll('國城B棟','南區綜合大樓B棟')
+    .replaceAll('國城C棟','南區綜合大樓C棟');
+}
+
+function normalizeBuildingData(i){
+  if(!i||typeof i!=='object')return i;
+
+  i.building=normalizeBuildingLabel(i.building);
+  i.locationBuilding=normalizeBuildingLabel(i.locationBuilding);
+  i.locationSummary=normalizeBuildingText(i.locationSummary);
+
+  if(Array.isArray(i.companyBuildings)){
+    i.companyBuildings=i.companyBuildings.map(normalizeBuildingLabel);
+  }
+
+  if(Array.isArray(i.officeBuildings)){
+    i.officeBuildings=i.officeBuildings.map(normalizeBuildingLabel);
+  }
+
+  if(Array.isArray(i.locations)){
+    i.locations=i.locations.map(l=>{
+      if(l&&typeof l==='object'){
+        l.building=normalizeBuildingLabel(l.building);
+      }
+      return l;
+    });
+  }
+
+  return i;
+}
+
+function applyResult(result,offline){
+  allData=Array.isArray(result.data)
+    ?result.data.map(normalizeBuildingData)
+    :[];
+  refreshFloors();
+  statusEl.textContent=(offline?'離線資料｜':'')
+    +(result.rawCount!=null?'原始 '+result.rawCount+' 筆 → ':'')
+    +'整併 '+(result.mergedCount??allData.length)
+    +' 家｜位置配對 '+(result.matchedLocationCount??0)+' 筆';
+  filterData();
+}
 
 function floorRank(v){const t=String(v||'').toUpperCase().trim(),b=t.match(/^B(\d+)F?$/),n=t.match(/(\d+)/);return b?-Number(b[1]):n?Number(n[1]):-999}
 function refreshFloors(){const b=building.value,old=floor.value,set=new Set();allData.forEach(i=>(i.locations||[]).forEach(l=>{if(b&&l.building!==b)return;if(l.floor)set.add(l.floor)}));const arr=[...set].sort((a,b)=>floorRank(b)-floorRank(a));floor.innerHTML='<option value="">全部樓層</option>';arr.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;floor.appendChild(o)});if(arr.includes(old))floor.value=old}
